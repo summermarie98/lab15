@@ -33,6 +33,22 @@ class MyApp:
 		self.up = Button(self.myContainer1)
 		self.up.configure(text="Up", background= "green")
 		self.up.grid(row=0,column=0)
+				
+		self.button2 = Button(self.myContainer1)
+		self.button2.configure(text="Left", background= "purple")
+		self.button2.grid(row=0,column=1)
+		self.button2.bind("<Button-1>", self.button2Click)
+		
+		self.button3 = Button(self.myContainer1)
+		self.button3.configure(text="Down", background= "red")
+		self.button3.grid(row=0,column=2)
+		self.button3.bind("<Button-1>", self.button3Click)
+		
+		self.button4 = Button(self.myContainer1)
+		self.button4.configure(text="Right", background= "yellow")
+		self.button4.grid(row=0,column=3)	
+		# "Bind" an action to the first button												
+		self.button4.bind("<Button-1>", self.button4Click)
 					
 		# "Bind" an action to the first button												
 		self.up.bind("<Button-1>", self.moveUp)
@@ -47,20 +63,42 @@ class MyApp:
 		global player
 		global drawpad
                 drawpad.move(player,0,-10)
-    
+                
+        def button2Click(self, event):
+                global player
+		global drawpad
+                drawpad.move(player,-10,0)
+                
+        def button3Click(self, event):
+                global player
+		global drawpad
+                drawpad.move(player,0,10)
+                
+        def button4Click(self, event):
+                global player
+		global drawpad
+                drawpad.move(player,10,0)
          
         # Animate function that will bounce target left and right, and trigger the collision detection  
 	def animate(self):
 	    global target
 	    global direction
-	    
-	    # Insert the code here to make the target move, bouncing on the edges    
-	        
-	        
-            
-            
+	    x1,y1,x2,y2= drawpad.coords(target)
+	   # Insert the code here to make the target move, bouncing on the edges
+	    drawpad.move(target,direction,0)    
+	    if x2>drawpad.winfo_width():
+	        direction = -3
+	    if x1<0:
+	        direction = 3
             #  This will trigger our collision detect function
             didWeHit = self.collisionDetect()
+            if didWeHit == True:
+                drawpad.itemconfig(target, fill = "red")
+            else:
+                drawpad.itemconfig(target, fill = "blue")
+                drawpad.after(10,self.animate)
+                
+            
             # Use the value of didWeHit to create an if statement
             # that determines whether to run drawpad.after(1,self.animate) or not
             
@@ -69,11 +107,13 @@ class MyApp:
                 global target
 		global drawpad
                 global player
-                # Get the co-ordinates of our player AND our target
-                # using x1,y1,x2,y2 = drawpad.coords(object)
-
-                # Do your if statement - remember to return True if successful!                
-		
+                x1,y1,x2,y2 = drawpad.coords(target)
+                Px1,Py1,Px2,Py2 = drawpad.coords(player)
+                if (Px1 >= x1 and Px2 <= x2) and (Py2 < y2 and Py1 > y1):
+                        return True
+                else:
+                    return False             
+                
 myapp = MyApp(root)
 
 root.mainloop()
