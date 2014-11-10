@@ -46,8 +46,6 @@ class MyApp:
 	def moveUp(self, event):   
 		global player
 		global drawpad
-                x1,y1,x2,y2 = drawpad.coords(player)
-		# Get the coords of our target
                 drawpad.move(player,0,-10)
     
          
@@ -55,7 +53,6 @@ class MyApp:
 	def animate(self):
 	    global target
 	    global direction
-	    tx1,ty1,tx2,ty2 = drawpad.coords(target)
 	    
 	    # Insert the code here to make the target move, bouncing on the edges    
 	        
